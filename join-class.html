@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduLink | Join Class</title>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", sans-serif;
+}
+body{
+  min-height:100vh;
+  background: linear-gradient(135deg,#e3f2fd,#fce4ec,#e8f5e9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.join-class-card{
+  background:rgba(255,255,255,0.95);
+  width:420px;
+  max-width:90%;
+  border-radius:22px;
+  padding:26px;
+  box-shadow:0 18px 45px rgba(0,0,0,0.12);
+}
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+.card-header h2{
+  font-size:22px;
+}
+.close-btn{
+  font-size:22px;
+  cursor:pointer;
+  color:#333;
+}
+.close-btn:hover{
+  color:#000;
+}
+.info{
+  background:#f5f7fa;
+  border-radius:14px;
+  padding:14px;
+  font-size:13px;
+  color:#555;
+  margin-bottom:18px;
+}
+.form-group{
+  margin-bottom:18px;
+}
+.form-group label{
+  font-size:13px;
+  color:#555;
+  display:block;
+  margin-bottom:6px;
+}
+.form-group input{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid #ccc;
+  font-size:15px;
+  text-align:center;
+  letter-spacing:2px;
+}
+.form-group input:focus{
+  outline:none;
+  border-color:#000;
+}
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+  margin-top:20px;
+}
+.btn{
+  padding:10px 22px;
+  border-radius:22px;
+  border:1px solid #000;
+  background:#fff;
+  cursor:pointer;
+  font-size:14px;
+}
+.btn:hover{
+  background:#000;
+  color:#fff;
+}
+.btn.primary{
+  background:#000;
+  color:#fff;
+}
+.btn.primary:hover{
+  background:#fff;
+  color:#000;
+}
+.footer-note{
+  margin-top:18px;
+  font-size:12px;
+  color:#666;
+}
+</style>
+</head>
+<body>
+<div class="join-class-card">
+  <div class="card-header">
+    <h2>Join class</h2>
+    <span class="close-btn" onclick="goBack()">✕</span>
+  </div>
+  <div class="info">
+    Ask your teacher for the class code, then enter it here.
+  </div>
+  <div class="form-group">
+    <label>Class code</label>
+    <input type="text" id="classCode" placeholder="e.g. abc-123">
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="goBack()">Cancel</button>
+    <button class="btn primary" onclick="joinClass()">Join</button>
+  </div>
+  <div class="footer-note">
+    Make sure you’re signed in with the correct account.
+  </div>
+</div>
+<script>
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+if (!token || role !== "student") {
+  alert("Access denied");
+  window.location.href = "login.html";
+}
+function goBack(){
+  window.location.href = "student-dashboard.html";
+}
+async function joinClass(){
+  const code = document.getElementById("classCode").value.trim().toUpperCase();
+  if(code === ""){
+    alert("Please enter class code");
+    return;
+  }
+  try{
+    const res = await fetch("http://localhost:5000/api/classes/join-by-code", {
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({ classCode: code })
+    });
+    const data = await res.json();
+    if(!res.ok){
+      alert(data.message);
+      return;
+    }
+    alert("Joined class successfully!");
+    window.location.href = "student-dashboard.html";
+  }catch(err){
+    console.error("Join error:", err);
+    alert("Server error");
+  }
+}
+</script>
+</body>
+</html>

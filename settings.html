@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduLink | Settings</title>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", sans-serif;
+}
+body{
+  min-height:100vh;
+  background: linear-gradient(135deg,#e3f2fd,#fce4ec,#e8f5e9);
+}
+.header{
+  height:64px;
+  background: linear-gradient(
+    135deg,
+    rgba(227,242,253,0.85),
+    rgba(243,229,245,0.85)
+  );
+  display:flex;
+  align-items:center;
+  padding:0 26px;
+  border-bottom:1px solid rgba(0,0,0,0.06);
+}
+.header h2{
+  font-size:20px;
+  font-weight:500;
+}
+.container{
+  max-width:900px;
+  margin:30px auto;
+  padding:0 20px;
+}
+.section{
+  background:rgba(255,255,255,0.9);
+  border-radius:20px;
+  padding:22px 26px;
+  margin-bottom:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+.section h3{
+  font-size:18px;
+  margin-bottom:16px;
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.row:last-child{
+  margin-bottom:0;
+}
+.row label{
+  font-size:14px;
+  color:#444;
+}
+.row input[type="text"],
+.row input[type="email"],
+.row input[type="password"]{
+  width:260px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid #ccc;
+}
+.row input[readonly]{
+  background:#f5f5f5;
+}
+.toggle{
+  display:flex;
+  align-items:center;
+}
+.toggle input{
+  margin-right:8px;
+}
+.btn{
+  padding:8px 18px;
+  border-radius:20px;
+  border:1px solid #000;
+  background:#fff;
+  cursor:pointer;
+}
+.btn:hover{
+  background:#000;
+  color:#fff;
+}
+.about-text{
+  font-size:14px;
+  color:#555;
+  line-height:1.6;
+}
+.about-text a{
+  color:#000;
+  text-decoration:underline;
+  cursor:pointer;
+}
+body.dark {
+  background: linear-gradient(135deg,#121212,#1e1e1e,#2a2a2a);
+  color:#eee;
+}
+body.dark .header{
+  background: linear-gradient(135deg,#1f1f1f,#2c2c2c);
+  color:#fff;
+}
+body.dark .section{
+  background: rgba(40,40,40,0.95);
+  color:#eee;
+}
+body.dark .row label{
+  color:#ccc;
+}
+body.dark input{
+  background:#2b2b2b;
+  color:#fff;
+  border:1px solid #555;
+}
+body.dark input[readonly]{
+  background:#1f1f1f;
+}
+body.dark .btn{
+  background:#000;
+  color:#fff;
+  border-color:#fff;
+}
+body.dark .footer{
+  color:#aaa;
+}
+.footer{
+  text-align:center;
+  font-size:13px;
+  color:#666;
+  margin-bottom:20px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h2>Settings</h2>
+</div>
+<div class="container">
+  <div class="section">
+    <h3>Account Settings</h3>
+    <div class="row">
+      <label>Full Name</label>
+      <input type="text" id="name">
+    </div>
+    <div class="row">
+      <label>Email</label>
+      <input type="email" id="email" readonly>
+    </div>
+    <div class="row">
+      <label>Role</label>
+      <input type="text" id="role" readonly>
+    </div>
+    <button class="btn" onclick="saveProfile()">Save Profile</button>
+    <hr style="margin:20px 0; border:none; border-top:1px solid #ddd;">
+    <div class="row">
+      <label>New Password</label>
+      <input type="password" id="newPass">
+    </div>
+    <div class="row">
+      <label>Confirm Password</label>
+      <input type="password" id="confirmPass">
+    </div>
+    <button class="btn" onclick="changePassword()">Change Password</button>
+  </div>
+  <div class="section">
+    <h3>Notifications</h3>
+    <div class="row">
+      <label>Email Notifications</label>
+      <div class="toggle">
+        <input type="checkbox" checked>
+      </div>
+    </div>
+    <div class="row">
+      <label>Your Classes Updates</label>
+      <div class="toggle">
+        <input type="checkbox" checked>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h3>Choose Theme</h3>
+    <div class="row">
+      <label>Light Mode</label>
+      <input type="radio" name="theme" id="lightTheme" checked>
+    </div>
+    <div class="row">
+      <label>Dark Mode</label>
+      <input type="radio" name="theme" id="darkTheme">
+    </div>
+  </div>
+  <div class="section">
+    <h3>About EduLink</h3>
+    <div class="about-text">
+      EduLink is a real-time classroom interaction system designed to improve
+      communication between teachers and students through announcements,
+      class management, and scheduling features.
+      <br><br>
+      <a>Privacy Policy</a> • <a>Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer">
+    © 2025 <strong>EduLink</strong> – Real-Time Classroom Interaction System
+  </div>
+</div>
+<script>
+const lightRadio = document.getElementById("lightTheme");
+const darkRadio = document.getElementById("darkTheme");
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+  darkRadio.checked = true;
+} else {
+  lightRadio.checked = true;
+}
+lightRadio.addEventListener("change", () => {
+  document.body.classList.remove("dark");
+  localStorage.setItem("theme", "light");
+});
+darkRadio.addEventListener("change", () => {
+  document.body.classList.add("dark");
+  localStorage.setItem("theme", "dark");
+});
+async function loadUserData() {
+  try {
+  const token = localStorage.getItem("token");
+  const res = await fetch("http://localhost:5000/api/dashboard/user", {
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+  });
+    if (!res.ok) {
+      alert("Please login first");
+      window.location.href = "login.html";
+      return;
+    }
+    const user = await res.json();
+    document.getElementById("name").value = user.name;
+    document.getElementById("email").value = user.email;
+    document.getElementById("role").value = user.role;
+  } catch (err) {
+    console.error(err);
+  }
+}
+loadUserData();
+function saveProfile(){
+  alert("Profile saved successfully");
+}
+function changePassword(){
+  if(newPass.value !== confirmPass.value){
+    alert("Passwords do not match");
+    return;
+  }
+  alert("Password changed successfully");
+}
+</script>
+</body>
+</html>

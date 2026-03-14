@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduLink | Teacher Dashboard</title>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", sans-serif;
+}
+body{
+  min-height:100vh;
+  display:flex;
+  background: linear-gradient(135deg,#e3f2fd,#fce4ec,#e8f5e9);
+}
+.sidebar{
+  width:240px;
+  background: linear-gradient(180deg,rgba(227,242,253,0.95),rgba(232,245,233,0.95));
+  backdrop-filter: blur(14px);
+  padding:22px;
+  border-right:1px solid rgba(0,0,0,0.06);
+}
+.logo{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:30px;
+}
+.menu a{
+  display:block;
+  padding:12px 16px;
+  margin-bottom:10px;
+  border-radius:14px;
+  text-decoration:none;
+  color:#333;
+  cursor:pointer;
+}
+.menu a:hover{
+  background:rgba(0,0,0,0.08);
+}
+.menu a.active{
+  background:#000;
+  color:#fff;
+}
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.topbar{
+  height:64px;
+  background: linear-gradient(135deg,rgba(227,242,253,0.85),rgba(243,229,245,0.85));
+  display:flex;
+  align-items:center;
+  padding:0 26px;
+  border-bottom:1px solid rgba(0,0,0,0.06);
+}
+.topbar h3{
+  font-size:18px;
+}
+.content{
+  padding:28px;
+  flex:1;
+}
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+.page-header h2{
+  font-size:26px;
+}
+.page-header p{
+  font-size:14px;
+  color:#555;
+}
+.btn{
+  padding:10px 20px;
+  border-radius:22px;
+  border:1px solid #000;
+  background:#fff;
+  cursor:pointer;
+}
+.btn:hover{
+  background:#000;
+  color:#fff;
+}
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap:22px;
+}
+.card{
+  background:rgba(255,255,255,0.88);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  cursor:pointer;
+  transition:0.3s;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 36px rgba(0,0,0,0.12);
+}
+.class-card{
+  overflow:hidden;
+  padding:0;
+  border-radius:20px;
+}
+.class-banner{
+  height:140px;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:flex-end;
+  padding:15px;
+  color:#fff;
+  font-size:20px;
+  font-weight:600;
+  position:relative;
+}
+.class-banner::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.35); /* dark overlay */
+}
+.class-banner span{
+  position:relative;
+  z-index:1;
+}
+.class-content{
+  padding:18px;
+}
+.list-card{
+  background:#fff;
+  padding:18px;
+  border-radius:18px;
+  margin-bottom:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+}
+.calendar-container{
+  background:#fff;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+.calendar-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+.calendar-header button{
+  padding:6px 12px;
+  border-radius:8px;
+  border:1px solid #000;
+  background:#fff;
+  cursor:pointer;
+}
+.calendar-header h3{
+  font-size:18px;
+}
+.calendar-grid{
+  display:grid;
+  grid-template-columns: repeat(7,1fr);
+  gap:8px;
+}
+.calendar-day{
+  text-align:center;
+  font-weight:600;
+  color:#555;
+}
+.calendar-date{
+  padding:6px;
+  min-height: 90px;
+  position:relative; 
+  border-radius:10px;
+  cursor:pointer;
+  background:#f5f5f5;
+}
+.calendar-date:hover{
+  background:#000;
+  color:#fff;
+}
+.calendar-date.has-event{
+  background:#e3f2fd;
+  border:2px solid #000;
+}
+.event-list{
+  margin-top:15px;
+}
+.event-item{
+  background:#e3f2fd;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:8px;
+}
+.day-number{
+  font-weight: bold;
+}
+.event-preview{
+  margin-top: 4px;
+  font-size: 11px;
+  color: #333;
+}
+.has-event{
+  background: #eef6ff;
+  border-left: 3px solid #007bff;
+}
+.modal{
+  display:none;
+  position:fixed;
+  z-index:1000;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+}
+.modal-content{
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  width:320px;
+  max-width:90%;
+}
+.modal-content h3{
+  margin-bottom:15px;
+}
+.modal-content input[type="text"]{
+  width:100%;
+  padding:8px;
+  margin-bottom:15px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+.modal-content button{
+  padding:8px 15px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+}
+.modal-content .save-btn{
+  background:#000;
+  color:#fff;
+  margin-right:10px;
+}
+.modal-content .cancel-btn{
+  background:#ccc;
+  color:#000;
+}
+#classOptionModal .save-btn{
+  background:#000;
+  color:#fff;
+  border:1px solid #000;
+}
+#classOptionModal .save-btn:hover{
+  background:#fff;
+  color:#000;
+}
+#classOptionModal .cancel-btn{
+  background:#fff;
+  color:#000;
+  border:1px solid #000;
+}
+#classOptionModal .cancel-btn:hover{
+  background:#000;
+  color:#fff;
+}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">EduLink</div>
+  <div class="menu">
+    <a class="active" onclick="loadDashboard()">Dashboard</a>
+    <a onclick="loadCalendar()">Calendar</a>
+    <a href="settings.html" target="_blank">Settings</a>
+    <a href="help.html" target="_blank">Help</a>
+    <a onclick="logout()">Logout</a>
+  </div>
+</div>
+<div class="main">
+  <div class="topbar">
+    <h3 id="pageTitle">Dashboard</h3>
+  </div>
+  <div class="content" id="contentArea"></div>
+</div>
+<div class="modal" id="eventModal">
+  <div class="modal-content">
+    <h3>Add/View Event</h3>
+    <input type="text" id="eventInput" placeholder="Enter event">
+    <div style="text-align:right;">
+      <button class="save-btn" onclick="saveEvent()">Save</button>
+      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="classOptionModal">
+  <div class="modal-content">
+    <h3>Select Option</h3>
+    <div style="margin-top:15px; text-align:center;">
+      <button class="save-btn" onclick="goToCreateClass()">Create Class</button>
+      <br><br>
+      <button class="cancel-btn" onclick="goToJoinClass()">Join Class</button>
+      <br><br>
+      <button class="cancel-btn" onclick="closeClassOptions()">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+const teacherData = {
+  name: localStorage.getItem("userName") || "Teacher",
+  classes: []   
+};
+function setActive(i){
+  document.querySelectorAll(".menu a").forEach((a,index)=>{
+    a.classList.toggle("active",index===i);
+  });
+}
+async function fetchTeacherClasses() {
+  try {
+    const res = await fetch("http://localhost:5000/api/classes", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    });
+    const data = await res.json();
+    teacherData.classes = data.map(cls => ({
+      id: cls._id,
+      name: cls.className,
+      subject: cls.subject,
+      section: cls.section,
+      classCode: cls.classCode
+    }));
+  } catch (err) {
+    console.error("Failed to load classes", err);
+  }
+}
+async function loadDashboard(){
+  setActive(0);
+  pageTitle.innerText = "Dashboard";
+  await fetchTeacherClasses();   
+  let html = `
+    <div class="page-header">
+      <div>
+        <h2>Welcome, ${teacherData.name}</h2>
+        <p>Manage your classrooms</p>
+      </div>
+      <button class="btn" onclick="openClassOptions()"> + </button>
+    </div>
+    <div class="grid">
+  `;
+  if (teacherData.classes.length === 0) {
+    html += `<p>No classes created yet</p>`;
+  }
+  teacherData.classes.forEach(c => {
+    const banners = [
+    "images/banner1.avif",
+    "images/banner2.avif",
+    "images/banner3.avif"
+    ];
+    html += `
+    <div class="card class-card" onclick="openClass('${c.id}')">
+      <div class="class-banner" style="background-image:url('${banners[Math.floor(Math.random()*banners.length)]}')">
+        <span>${c.name} ${c.section ? "- " + c.section : ""}</span>
+      </div>
+      <div class="class-content">
+        <p>📘 ${c.subject}</p>
+        <p>🔑 Code: <b>${c.classCode}</b></p>
+      </div>
+    </div>
+    `;
+  });
+  html += `</div>`;
+  contentArea.innerHTML = html;
+}
+function openClass(classId){
+  window.location.href = "class.html?id=" + classId;
+}
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let selectedDate = "";
+let calendarEvents = {};   
+function formatDate(year, month, day) {
+  return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+}
+function loadCalendar(){
+  setActive(1);
+  pageTitle.innerText="Calendar";
+  contentArea.innerHTML=`
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <button onclick="prevMonth()">◀</button>
+        <h3 id="monthYear"></h3>
+        <button onclick="nextMonth()">▶</button>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-day">Sun</div>
+        <div class="calendar-day">Mon</div>
+        <div class="calendar-day">Tue</div>
+        <div class="calendar-day">Wed</div>
+        <div class="calendar-day">Thu</div>
+        <div class="calendar-day">Fri</div>
+        <div class="calendar-day">Sat</div>
+      </div>
+      <div class="calendar-grid" id="calendarDates"></div>
+    </div>
+  `;
+  fetchCalendarEvents().then(renderCalendar);
+}
+async function fetchCalendarEvents(){
+  const res = await fetch("http://localhost:5000/api/calendar", {
+    headers:{
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  });
+  const data = await res.json();
+  calendarEvents = {};
+  data.forEach(e => {
+    if (!calendarEvents[e.date]) {
+    calendarEvents[e.date] = [];
+    }
+    calendarEvents[e.date].push(e.title);
+});
+}
+function renderCalendar(){
+  const monthYear = document.getElementById("monthYear");
+  const calendarDates = document.getElementById("calendarDates");
+  const months = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+  monthYear.innerText = `${months[currentMonth]} ${currentYear}`;
+  calendarDates.innerHTML = "";
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  for(let i=0;i<firstDay;i++){
+    calendarDates.innerHTML += `<div></div>`;
+  }
+  for(let day=1; day<=daysInMonth; day++){
+    const dateKey = formatDate(currentYear, currentMonth + 1, day);
+    const events = calendarEvents[dateKey] || [];
+    calendarDates.innerHTML += `
+    <div class="calendar-date ${events.length ? 'has-event':''}"
+         onclick="openModal('${dateKey}')">
+      <span class="day-number">${day}</span>
+      <div class="event-preview">
+        ${events.slice(0,2).map(e => `<small>${e}</small>`).join("")}
+        ${events.length > 2 ? `<small>+${events.length-2} more</small>` : ""}
+      </div>
+    </div>
+    `;
+  }
+  if(selectedDate) showEvent(selectedDate);
+}
+function prevMonth(){
+  currentMonth--;
+  if(currentMonth < 0){
+    currentMonth = 11;
+    currentYear--;
+  }
+  renderCalendar();
+}
+function nextMonth(){
+  currentMonth++;
+  if(currentMonth > 11){
+    currentMonth = 0;
+    currentYear++;
+  }
+  renderCalendar();
+}
+function openModal(dateKey){
+  selectedDate = dateKey;
+  const modal = document.getElementById("eventModal");
+  modal.style.display = "flex";
+  document.getElementById("eventInput").value = "";
+}
+function closeModal(){
+  document.getElementById("eventModal").style.display = "none";
+}
+async function saveEvent(){
+  const event = document.getElementById("eventInput").value;
+  if(!event) return;
+  const today = new Date();
+  today.setHours(0,0,0,0); 
+  const selected = new Date(selectedDate);
+  if(selected < today){
+    alert("You cannot add events to past dates.");
+    return;
+  }
+  await fetch("http://localhost:5000/api/calendar", {
+    method: "POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: "Bearer " + localStorage.getItem("token")
+    },
+    body: JSON.stringify({
+      date: selectedDate,
+      title: event
+    })
+  });
+  closeModal();
+  fetchCalendarEvents().then(renderCalendar);
+}
+function openClassOptions(){
+  document.getElementById("classOptionModal").style.display = "flex";
+}
+function closeClassOptions(){
+  document.getElementById("classOptionModal").style.display = "none";
+}
+function goToCreateClass(){
+  window.location.href = "create-class.html";
+}
+function goToJoinClass(){
+  window.location.href = "join-class.html";
+}
+function logout(){
+  localStorage.clear();
+  window.location.href="login.html";
+}
+loadDashboard();
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  if (!token) {
+    alert("Please login first");
+    window.location.href = "login.html";
+  }
+  if (role !== "teacher") {
+    alert("Access denied");
+    window.location.href = "login.html";
+  }
+</script>
+</body>
+</html>

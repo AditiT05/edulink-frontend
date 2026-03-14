@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduLink | Real-Time Classroom</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 10%, #e3f2fd 0%, transparent 40%),
+        radial-gradient(circle at 90% 20%, #f3e5f5 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, #e8f5e9 0%, transparent 40%),
+        linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+      color: #333;
+      overflow-x: hidden;
+    }
+    .bg-shape {
+      position: fixed;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.6;
+      z-index: -1;
+    }
+    .bg-shape-1 {
+      background: #bbdefb;
+      top: 80px;
+      left: -100px;
+    }
+    .bg-shape-2 {
+      background: #c8e6c9;
+      top: 300px;
+      right: -120px;
+    }
+    .bg-shape-3 {
+      background: #e1bee7;
+      bottom: -120px;
+      left: 40%;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 600;
+      color: #000;
+    }
+    .hero h2 {
+      font-size: 22px;
+      margin: 10px 0;
+    }
+    .hero p {
+      font-size: 16px;
+      max-width: 600px;
+      margin: 15px auto 30px;
+      line-height: 1.6;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+    }
+    button {
+      padding: 12px 34px;
+      font-size: 16px;
+      border: 2px solid #000;
+      border-radius: 30px;
+      cursor: pointer;
+      background: #fff;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #000;
+      color: #fff;
+    }
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 55px;
+    }
+    .feature-card {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      padding: 32px;
+      border-radius: 22px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    .feature-card:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+    .feature-card:nth-child(1) {
+      background: #e8f5e9; 
+    }
+    .feature-card:nth-child(2) {
+      background: #e3f2fd; 
+    }
+    .feature-card:nth-child(3) {
+      background: #f3e5f5; 
+    }
+    .feature-card img {
+      width: 260px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+    .feature-content {
+      flex: 1;
+    }
+    .feature-content h3 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: #000;
+    }
+    .feature-content p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #444;
+    }
+    @media (max-width: 768px) {
+      .feature-card,
+      .feature-card:nth-child(even) {
+        flex-direction: column;
+        text-align: center;
+      }
+      .feature-card img {
+        width: 100%;
+        height: 200px;
+      }
+    }
+    #chatToggle{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      width:55px;
+      height:55px;
+      border-radius:50%;
+      border:none;
+      background:#000;
+      color:#fff;
+      font-size:24px;
+      cursor:pointer;
+      z-index:999;
+    }
+    #chatbot{
+      position:fixed;
+      bottom:85px;
+      right:20px;
+      width:320px;
+      height:420px;
+      background:rgba(255,255,255,0.85);
+      backdrop-filter:blur(12px);
+      border-radius:20px;
+      box-shadow:0 12px 35px rgba(0,0,0,0.25);
+      display:none;
+      flex-direction:column;
+      overflow:hidden;
+      z-index:999;
+    }
+    #chatHeader{
+      padding:14px;
+      background:#000;
+      color:#fff;
+      text-align:center;
+      font-weight:bold;
+    }
+    #chatMessages{
+      flex:1;
+      padding:12px;
+      overflow-y:auto;
+      font-size:14px;
+    }
+    .user-msg{ text-align:right; margin-bottom:8px; }
+    .bot-msg{ text-align:left; margin-bottom:8px; }
+    #chatInputArea{
+      display:flex;
+      border-top:1px solid #ddd;
+    }
+    #chatInput{
+      flex:1;
+      padding:10px;
+      border:none;
+      outline:none;
+    }
+    #sendBtn{
+      padding:10px 14px;
+      background:#000;
+      color:#fff;
+      border:none;
+      cursor:pointer;
+    }
+    .footer{
+    margin-top:80px;
+    padding:40px 20px 20px;
+    background: transparent;   
+    border-top:2px solid #000;
+    }
+    .footer-container{
+    max-width:1100px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    gap:40px;
+    flex-wrap:wrap;
+    }
+    .footer-section{
+    flex:1;
+    min-width:280px;
+    }
+    .footer-section h3{
+    margin-bottom:15px;
+    font-size:18px;
+    }
+    .footer-section p{
+    font-size:14px;
+    margin-bottom:8px;
+    color:#444;
+    }
+   .footer-section form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    }
+    .footer-section input,
+    .footer-section textarea{
+    padding:8px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:14px;
+    }
+    .footer-section button{
+    align-self: flex-start;   
+    padding: 12px 34px;       
+    font-size: 16px;
+    border: 2px solid #000;
+    border-radius: 30px;
+    background: #fff;
+    cursor: pointer;
+    transition: 0.3s ease;
+    }
+    .footer-section button:hover{
+    background:#000;
+    color:#fff;
+    }
+    .footer-bottom{
+    text-align:center;
+    margin-top:30px;
+    font-size:13px;
+    color:#555;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-shape bg-shape-1"></div>
+  <div class="bg-shape bg-shape-2"></div>
+  <div class="bg-shape bg-shape-3"></div>
+  <div class="container">
+    <section class="hero">
+      <h1>EduLink</h1>
+      <h2>Real-Time Classroom Interaction System</h2>
+      <p>
+        A smart web platform inspired by Google Classroom to manage classes,
+        assignments, and real-time student–teacher interactions.
+      </p>
+      <div class="action-buttons">
+        <button onclick="goToRegister()">Get Started</button>
+      </div>
+    </section>
+    <section class="features">
+      <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1588072432836-e10032774350" alt="Classroom Management">
+        <div class="feature-content">
+          <h3> Classroom Management</h3>
+          <p>
+            Teachers can create and manage digital classrooms, while students
+            can join, access resources, and stay organized.
+          </p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f" alt="Real-Time Interaction">
+        <div class="feature-content">
+          <h3> Real-Time Interaction</h3>
+          <p>
+            Enables live discussions, polls, instant feedback, and strong
+            engagement between teachers and students.
+          </p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" alt="Assignments">
+        <div class="feature-content">
+          <h3> Assignments & Assessments</h3>
+          <p>
+            Online assignment submission, grading, and structured feedback
+            for better academic performance.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <button id="chatToggle">💬</button>
+  <div id="chatbot">
+    <div id="chatHeader">EduLink AI </div>
+    <div id="chatMessages">
+      <div class="bot-msg"><b>Bot:</b> Hi! Ask me anything about EduLink.</div>
+    </div>
+    <div id="chatInputArea">
+      <input id="chatInput" placeholder="Type your question..." />
+      <button id="sendBtn">➤</button>
+    </div>
+  </div>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3><strong>EduLink</strong></h3>
+      <p>
+        D.G. Ruparel College,<br>
+        Matunga Road, Mumbai – 400016,<br>
+        Maharashtra, India
+      </p>
+      <p>Email: support@edulink.com</p>
+      <p>Phone: +91 98765 43210</p>
+    </div>
+    <div class="footer-section">
+      <h3>Contact Us</h3>
+      <form onsubmit="sendContact(event)">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea rows="3" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2025 <strong>EduLink</strong> – All Rights Reserved
+  </div>
+</footer>
+<script>
+  function goToRegister() {
+    window.location.href = "register.html";
+  }
+  const chatToggle = document.getElementById("chatToggle");
+  const chatbot = document.getElementById("chatbot");
+  const sendBtn = document.getElementById("sendBtn");
+  const chatInput = document.getElementById("chatInput");
+  const chatMessages = document.getElementById("chatMessages");
+chatToggle.addEventListener("click", () => {
+  chatbot.style.display =
+  chatbot.style.display === "flex" ? "none" : "flex";
+});
+async function sendMessage() {
+  const message = chatInput.value.trim();
+  if (!message) return;
+  const userDiv = document.createElement("div");
+  userDiv.className = "user-msg";
+  userDiv.innerHTML = `<b>You:</b> ${message}`;
+  chatMessages.appendChild(userDiv);
+  chatInput.value = "";
+  try {
+    const response = await fetch("http://localhost:5000/api/chatbot", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+    const data = await response.json();
+    const botDiv = document.createElement("div");
+    botDiv.className = "bot-msg";
+    botDiv.innerHTML = `<b>Bot:</b> ${data.reply}`;
+    chatMessages.appendChild(botDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } catch (error) {
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "bot-msg";
+    errorDiv.innerHTML = `<b>Bot:</b> Server error. Please try again.`;
+    chatMessages.appendChild(errorDiv);
+  }
+}
+sendBtn.addEventListener("click", sendMessage);
+chatInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+});
+
+  async function sendContact(event){
+  event.preventDefault();
+  const name = event.target[0].value;
+  const email = event.target[1].value;
+  const message = event.target[2].value;
+  try{
+    const res = await fetch("http://localhost:5000/api/contact",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({ name, email, message })
+    });
+    const data = await res.json();
+    alert(data.msg);
+    event.target.reset();
+  }catch(err){
+    alert("Something went wrong!");
+  }
+}
+</script>
+</body>
+</html>
