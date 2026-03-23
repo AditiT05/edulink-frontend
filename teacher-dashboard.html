@@ -326,7 +326,7 @@ function setActive(i){
 }
 async function fetchTeacherClasses() {
   try {
-    const res = await fetch("http://localhost:5000/api/classes", {
+    const res = await fetch("https://edulink-backend-modf.onrender.com/api/classes", {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
       }
@@ -416,7 +416,7 @@ function loadCalendar(){
   fetchCalendarEvents().then(renderCalendar);
 }
 async function fetchCalendarEvents(){
-  const res = await fetch("http://localhost:5000/api/calendar", {
+  const res = await fetch("https://edulink-backend-modf.onrender.com/api/calendar", {
     headers:{
       Authorization: "Bearer " + localStorage.getItem("token")
     }
@@ -495,7 +495,7 @@ async function saveEvent(){
     alert("You cannot add events to past dates.");
     return;
   }
-  await fetch("http://localhost:5000/api/calendar", {
+  await fetch("https://edulink-backend-modf.onrender.com/api/calendar", {
     method: "POST",
     headers:{
       "Content-Type":"application/json",

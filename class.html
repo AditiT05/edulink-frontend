@@ -170,7 +170,7 @@ if (!classId) {
 }
 async function loadClassDetails() {
   try {
-    const res = await fetch(`http://localhost:5000/api/classes/${classId}`, {
+    const res = await fetch(`https://edulink-backend-modf.onrender.com/api/classes/${classId}`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
       }
@@ -212,7 +212,7 @@ function loadTab(tab, btn){
 const role = localStorage.getItem("role"); 
 async function loadStream() {
   try {
-    const res = await fetch(`http://localhost:5000/api/announcements/${classId}`, {
+    const res = await fetch(`https://edulink-backend-modf.onrender.com/api/announcements/${classId}`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
       }
@@ -270,7 +270,7 @@ async function loadStream() {
 async function postAnnouncement() {
   const text = document.getElementById("announcementText").value;
   if (!text) return;
-  await fetch(`http://localhost:5000/api/announcements/${classId}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/announcements/${classId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -283,7 +283,7 @@ async function postAnnouncement() {
 async function editAnnouncement(id, oldText) {
   const newText = prompt("Edit announcement", oldText);
   if (!newText) return;
-  await fetch(`http://localhost:5000/api/announcements/${id}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/announcements/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -295,7 +295,7 @@ async function editAnnouncement(id, oldText) {
 }
 async function deleteAnnouncement(id) {
   if (!confirm("Delete this announcement?")) return;
-  await fetch(`http://localhost:5000/api/announcements/${id}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/announcements/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
@@ -305,7 +305,7 @@ async function deleteAnnouncement(id) {
 }
 async function addComment(announcementId, text, inputEl) {
   if (!text) return;
-  await fetch(`http://localhost:5000/api/announcements/${announcementId}/comments`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/announcements/${announcementId}/comments`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -318,7 +318,7 @@ async function addComment(announcementId, text, inputEl) {
 }
 async function loadAssignments() {
   try {
-    const res = await fetch(`http://localhost:5000/api/assignments/${classId}`, {
+    const res = await fetch(`https://edulink-backend-modf.onrender.com/api/assignments/${classId}`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
       }
@@ -405,7 +405,7 @@ async function submitAssignment(assignmentId) {
   }
   const formData = new FormData();
   formData.append("file", file);
-  await fetch(`http://localhost:5000/api/submissions/${assignmentId}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/submissions/${assignmentId}`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
@@ -417,7 +417,7 @@ async function submitAssignment(assignmentId) {
 }
 async function loadSubmissions(assignmentId, btn) {
   const container = document.getElementById(`submissionList-${assignmentId}`);
-  const res = await fetch(`http://localhost:5000/api/submissions/${assignmentId}`, {
+  const res = await fetch(`https://edulink-backend-modf.onrender.com/api/submissions/${assignmentId}`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
     }
@@ -448,7 +448,7 @@ async function uploadAssignment() {
   formData.append("description", document.getElementById("aDesc").value);
   formData.append("dueDate", document.getElementById("aDue").value);
   formData.append("file", document.getElementById("aFile").files[0]);
-  await fetch(`http://localhost:5000/api/assignments/${classId}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/assignments/${classId}`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
@@ -459,7 +459,7 @@ async function uploadAssignment() {
 }
 async function deleteAssignment(id) {
   if (!confirm("Delete this assignment?")) return;
-  await fetch(`http://localhost:5000/api/assignments/${id}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/assignments/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
@@ -469,7 +469,7 @@ async function deleteAssignment(id) {
 }
 async function loadNotes() {
   try {
-    const res = await fetch(`http://localhost:5000/api/notes/${classId}`, {
+    const res = await fetch(`https://edulink-backend-modf.onrender.com/api/notes/${classId}`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
       }
@@ -530,7 +530,7 @@ async function uploadNotes() {
   const formData = new FormData();
   formData.append("title", title);
   formData.append("file", file);
-  await fetch(`http://localhost:5000/api/notes/${classId}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/notes/${classId}`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
@@ -541,7 +541,7 @@ async function uploadNotes() {
 }
 async function deleteNotes(noteId) {
   if (!confirm("Delete this note?")) return;
-  await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+  await fetch(`https://edulink-backend-modf.onrender.com/api/notes/${noteId}`, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
@@ -549,12 +549,12 @@ async function deleteNotes(noteId) {
   });
   loadNotes();
 }
-const API_BASE = "http://localhost:5000/api/meet";
+const API_BASE = "https://edulink-backend-modf.onrender.com/api/meet";
 const token = localStorage.getItem("token");
 async function loadMeet() {
   contentArea.innerHTML = "<p>Loading Meet...</p>";
   try {
-    const res = await fetch(`http://localhost:5000/api/meet/${classId}`, {
+    const res = await fetch(`https://edulink-backend-modf.onrender.com/api/meet/${classId}`, {
       headers: { Authorization: "Bearer " + localStorage.getItem("token") }
     });
     const data = await res.json();
@@ -614,7 +614,7 @@ function startMeeting(roomName) {
 async function loadPeople() {
   contentArea.innerHTML = "<p>Loading people...</p>";
   try {
-    const res = await fetch(`http://localhost:5000/api/classes/${classId}/people`, {
+    const res = await fetch(`https://edulink-backend-modf.onrender.com/api/classes/${classId}/people`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
       }
